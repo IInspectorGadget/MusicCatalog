@@ -1,9 +1,9 @@
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 import cx from "classnames";
 
 import s from "./Tags.module.scss";
 
-const Tags = ({ classInput, value: tags, setValue: setTags, setDirty, setError, isRequired = true, max, checkErrors: checkTags }) => {
+const Tags = memo(({ classInput, value: tags, setValue: setTags, setDirty, setError, isRequired = true, max, checkErrors: checkTags }) => {
   const checkError = useCallback(
     (length) => {
       checkTags(length, max, isRequired, setError, setDirty);
@@ -64,6 +64,8 @@ const Tags = ({ classInput, value: tags, setValue: setTags, setDirty, setError, 
       </ul>
     </div>
   );
-};
+});
+
+Tags.displayName = "Tags";
 
 export default Tags;

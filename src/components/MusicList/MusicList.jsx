@@ -1,8 +1,9 @@
 import Container from "@components/Container";
+
 import Header from "./Header";
+import Main from "@components/Main";
 
 import s from "./MusicList.module.scss";
-import Main from "@components/Main";
 
 const MusicList = () => {
   return (

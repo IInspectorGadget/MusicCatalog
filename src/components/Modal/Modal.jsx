@@ -1,10 +1,11 @@
+import { memo } from "react";
 import cx from "classnames";
 
 import Container from "@components/Container";
 
 import s from "./Modal.module.scss";
 
-const Modal = ({ isVisible, setIsVisible, children }) => {
+const Modal = memo(({ isVisible, setIsVisible, children }) => {
   return (
     <div className={cx(s.root, { [s.rootActive]: isVisible })} onClick={() => setIsVisible(false)}>
       <Container className={s.container}>
@@ -15,6 +16,8 @@ const Modal = ({ isVisible, setIsVisible, children }) => {
       </Container>
     </div>
   );
-};
+});
+
+Modal.displayName = "Modal";
 
 export default Modal;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { addItem } from "@src/redux/listSlice";
@@ -12,7 +12,7 @@ import Button from "@components/Button";
 
 import s from "./Form.module.scss";
 
-const Form = ({ setIsVisible }) => {
+const Form = memo(({ setIsVisible }) => {
   const dispatch = useDispatch();
 
   const [author, setAuthor] = useState("");
@@ -33,53 +33,39 @@ const Form = ({ setIsVisible }) => {
   const [dateError, setDateError] = useState("");
   const [textError, setTextError] = useState("");
 
-  const handlerSubmit = (e) => {
-    e.preventDefault();
-    if (authorDirty || titleDirty || tagsDirty || dateDirty || textDirty) {
-      checkErrors();
-    } else {
-      const item = {
-        id: Math.random(),
-        author,
-        title,
-        tags,
-        date,
-        text,
-      };
-      dispatch(addItem(item));
-      setIsVisible(false);
-    }
-  };
-  const handlerKeyDown = (e) => {
+  const handlerKeyDown = useCallback((e) => {
     if (e.key === "Enter") {
       e.preventDefault();
     }
-  };
+  }, []);
 
-  const dateValidator = (value) => {
+  const dateValidator = useCallback((value) => {
     if (/^\d{4}-\d{2}-\d{2}$/.test(value.trim())) {
       return true;
     }
     return false;
-  };
+  }, []);
 
-  const checkInput = (type, value, maxLength, isRequired, setError, setDirty) => {
-    if (!value.length && isRequired && type !== "date") {
-      console.log(value);
-      setError("Поле не может быть пустым");
-      setDirty(true);
-    } else if (value.length >= maxLength && type !== "date") {
-      setError("Превышен лимит символов");
-      setDirty(true);
-    } else if (type === "date" && !dateValidator(value)) {
-      setError("Не правильный формат даты");
-      setDirty(true);
-    } else {
-      setDirty(false);
-    }
-  };
+  const checkInput = useCallback(
+    (type, value, maxLength, isRequired, setError, setDirty) => {
+      if (!value.length && isRequired && type !== "date") {
+        console.log(value);
+        setError("Поле не может быть пустым");
+        setDirty(true);
+      } else if (value.length >= maxLength && type !== "date") {
+        setError("Превышен лимит символов");
+        setDirty(true);
+      } else if (type === "date" && !dateValidator(value)) {
+        setError("Не правильный формат даты");
+        setDirty(true);
+      } else {
+        setDirty(false);
+      }
+    },
+    [dateValidator],
+  );
 
-  const checkTags = (length, max, isRequired, setError, setDirty) => {
+  const checkTags = useCallback((length, max, isRequired, setError, setDirty) => {
     if (isRequired && !length) {
       setError("Должен быть хотя бы один жанр");
       setDirty(true);
@@ -90,17 +76,17 @@ const Form = ({ setIsVisible }) => {
       setError("");
       setDirty(false);
     }
-  };
+  }, []);
 
-  const checkErrors = () => {
+  const checkErrors = useCallback(() => {
     checkInput("text", author, 50, true, setAuthorError, setAuthorDirty);
     checkInput("text", title, 50, true, setTitleError, setTitleDirty);
     checkInput("date", date, null, true, setDateError, setDateDirty);
     checkTags(tags.length, 5, true, setTagsError, setTagsDirty);
     checkInput("text", text, 2000, true, setTextError, setTextDirty);
-  };
+  }, [author, checkInput, checkTags, date, tags, text, title]);
 
-  const handlerReset = () => {
+  const handlerReset = useCallback(() => {
     setAuthorDirty(true);
     setTitleDirty(true);
     setTagsDirty(true);
@@ -111,7 +97,28 @@ const Form = ({ setIsVisible }) => {
     setTagsError("");
     setDateError("");
     setTextError("");
-  };
+  }, []);
+
+  const handlerSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (authorDirty || titleDirty || tagsDirty || dateDirty || textDirty) {
+        checkErrors();
+      } else {
+        const item = {
+          id: Math.random(),
+          author,
+          title,
+          tags,
+          date,
+          text,
+        };
+        dispatch(addItem(item));
+        setIsVisible(false);
+      }
+    },
+    [author, authorDirty, checkErrors, date, dateDirty, dispatch, setIsVisible, tags, tagsDirty, text, textDirty, title, titleDirty],
+  );
 
   return (
     <form className={s.root} onKeyDown={handlerKeyDown} onSubmit={handlerSubmit}>
@@ -190,6 +197,8 @@ const Form = ({ setIsVisible }) => {
       </div>
     </form>
   );
-};
+});
+
+Form.displayName = "Form";
 
 export default Form;

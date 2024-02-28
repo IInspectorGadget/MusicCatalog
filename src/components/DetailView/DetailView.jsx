@@ -1,10 +1,11 @@
+import { memo, useCallback } from "react";
 import cx from "classnames";
 
 import s from "./DetailView.module.scss";
 import DetailItem from "./DetailItem";
 
-const DetailView = ({ item }) => {
-  const getDate = (date) => {
+const DetailView = memo(({ item }) => {
+  const getDate = useCallback((date) => {
     const newDate = new Date(date);
     const year = newDate.getFullYear();
     let day = newDate.getDate();
@@ -14,7 +15,7 @@ const DetailView = ({ item }) => {
     day = day < 10 ? "0" + day : day;
 
     return day + " - " + month + " - " + year;
-  };
+  }, []);
 
   return (
     <div className={cx(s.root)}>
@@ -25,6 +26,8 @@ const DetailView = ({ item }) => {
       <DetailItem title='Текс' text={item.text} isBigText />
     </div>
   );
-};
+});
+
+DetailView.displayName = "DetailView";
 
 export default DetailView;

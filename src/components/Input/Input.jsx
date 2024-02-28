@@ -1,27 +1,26 @@
-import { forwardRef, memo } from "react";
+import { memo, useCallback } from "react";
 import cx from "classnames";
 
 import s from "./Input.module.scss";
 
-const Input = forwardRef(
-  (
-    { className, type = "text", placeholder, name, id, maxLength, isRequired = true, value, setValue, setDirty, setError, checkErrors },
-    ref,
-  ) => {
-    const handlerBlur = () => {
+const Input = memo(
+  ({ className, type = "text", placeholder, name, id, maxLength, isRequired = true, value, setValue, setDirty, setError, checkErrors }) => {
+    const handlerBlur = useCallback(() => {
       setValue((prev) => prev.trim());
       checkErrors(type, value.trim(), maxLength, isRequired, setError, setDirty);
-    };
+    }, [checkErrors, isRequired, maxLength, setDirty, setError, setValue, type, value]);
 
-    const handlerChange = (e) => {
-      const target = e.currentTarget;
-      const value = target.value.slice(0, maxLength);
-      setValue(value);
-    };
+    const handlerChange = useCallback(
+      (e) => {
+        const target = e.currentTarget;
+        const value = target.value.slice(0, maxLength);
+        setValue(value);
+      },
+      [maxLength, setValue],
+    );
 
     return (
       <input
-        ref={ref}
         id={id}
         name={name}
         type={type}
@@ -38,4 +37,4 @@ const Input = forwardRef(
 
 Input.displayName = "Input";
 
-export default memo(Input);
+export default Input;

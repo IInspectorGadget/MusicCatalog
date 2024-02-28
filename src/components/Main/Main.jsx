@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import Modal from "@components/Modal";
 import Container from "@components/Container";
@@ -12,11 +12,11 @@ const Main = () => {
   const [id, setId] = useState(null);
   const list = useSelector((state) => state.list.value);
 
-  const handlerClick = (e) => {
+  const handlerClick = useCallback((e) => {
     const newId = e.currentTarget.id;
     setIsVisible(true);
     setId(Number(newId));
-  };
+  }, []);
 
   return (
     <main className={s.root}>
