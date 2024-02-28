@@ -1,0 +1,14 @@
+.root {
+  resize: vertical;
+
+  overflow: hidden scroll;
+
+  width: 100%;
+  min-height: 152px;
+}
+
+@media (width <= 720px) {
+  .root {
+    min-height: 132px;
+  }
+}

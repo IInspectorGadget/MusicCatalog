@@ -1,0 +1,15 @@
+.root {
+  background: var(--purpure800);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  font-size: 48px;
+  line-height: 100px;
+  color: var(--white);
+}

@@ -1,0 +1,48 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.item {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+
+  padding: 5px 10px;
+
+  background-color: var(--purpure400);
+  border-radius: 6px;
+}
+
+.tag {
+  color: var(--white);
+}
+
+.close {
+  cursor: pointer;
+
+  position: relative;
+  transform: rotate(45deg);
+
+  width: 20px;
+  height: 20px;
+
+  font-size: 20px;
+
+  background-color: var(--white);
+  border-radius: 50%;
+
+  &::after {
+    content: "+";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

@@ -1,0 +1,17 @@
+.root {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.title {
+  color: var(--gray);
+}
+
+.text {
+  max-height: 50vh;
+
+  &Big {
+    overflow-y: scroll;
+    white-space: pre-line;
+  }
+}
