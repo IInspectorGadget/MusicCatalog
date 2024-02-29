@@ -7,14 +7,11 @@ import DetailItem from "./DetailItem";
 const DetailView = memo(({ item }) => {
   const getDate = useCallback((date) => {
     const newDate = new Date(date);
-    const year = newDate.getFullYear();
-    let day = newDate.getDate();
-    let month = newDate.getMonth() + 1;
+    const year = `${newDate.getFullYear()}`.padStart(4, "0");
+    const day = `${newDate.getDate()}`.padStart(2, "0");
+    const month = `${newDate.getDate()}`.padStart(2, "0");
 
-    month = month < 10 ? "0" + month : month;
-    day = day < 10 ? "0" + day : day;
-
-    return day + " - " + month + " - " + year;
+    return `${day}-${month}-${year}`;
   }, []);
 
   return (

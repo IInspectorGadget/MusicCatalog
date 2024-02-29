@@ -16,9 +16,6 @@ export const listSlice = createSlice({
     deleteItem: (state, action) => {
       state.value = state.value.filter((el) => el.id !== action.payload);
     },
-    deleteCompleted: (state) => {
-      state.value = state.value.filter((el) => el.completed !== true);
-    },
     changeItem: (state, action) => {
       state.value = state.value.map((el) => {
         if (el.id === action.payload.id) {
@@ -31,6 +28,6 @@ export const listSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { addItem, deleteItem, deleteCompleted, changeItem } = listSlice.actions;
+export const { addItem, deleteItem, changeItem } = listSlice.actions;
 
 export default listSlice.reducer;

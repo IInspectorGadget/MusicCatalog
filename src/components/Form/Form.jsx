@@ -12,7 +12,7 @@ import Button from "@components/Button";
 
 import s from "./Form.module.scss";
 
-const Form = memo(({ setIsVisible }) => {
+const Form = memo(({ closeModal }) => {
   const dispatch = useDispatch();
 
   const [author, setAuthor] = useState("");
@@ -39,17 +39,11 @@ const Form = memo(({ setIsVisible }) => {
     }
   }, []);
 
-  const dateValidator = useCallback((value) => {
-    if (/^\d{4}-\d{2}-\d{2}$/.test(value.trim())) {
-      return true;
-    }
-    return false;
-  }, []);
+  const dateValidator = useCallback((value) => /^\d{4}-\d{2}-\d{2}$/.test(value.trim()), []);
 
   const checkInput = useCallback(
     (type, value, maxLength, isRequired, setError, setDirty) => {
       if (!value.length && isRequired && type !== "date") {
-        console.log(value);
         setError("Поле не может быть пустым");
         setDirty(true);
       } else if (value.length >= maxLength && type !== "date") {
@@ -70,7 +64,7 @@ const Form = memo(({ setIsVisible }) => {
       setError("Должен быть хотя бы один жанр");
       setDirty(true);
     } else if (length > max) {
-      setError("Кол-во жанров не должно превышать 4");
+      setError(`Кол-во жанров не должно превышать ${max}`);
       setDirty(true);
     } else {
       setError("");
@@ -119,7 +113,7 @@ const Form = memo(({ setIsVisible }) => {
           text,
         };
         dispatch(addItem(item));
-        setIsVisible(false);
+        closeModal(false);
         handlerReset();
       }
     },
@@ -130,7 +124,7 @@ const Form = memo(({ setIsVisible }) => {
       date,
       dateDirty,
       dispatch,
-      setIsVisible,
+      closeModal,
       tags,
       tagsDirty,
       text,

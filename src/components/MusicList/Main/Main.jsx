@@ -12,11 +12,18 @@ const Main = () => {
   const [id, setId] = useState(null);
   const list = useSelector((state) => state.list.value);
 
-  const handlerClick = useCallback((e) => {
-    const newId = e.currentTarget.id;
-    setIsVisible(true);
-    setId(Number(newId));
-  }, []);
+  const closeModal = useCallback(() => {
+    setIsVisible(false);
+  }, [setIsVisible]);
+
+  const handlerClick = useCallback(
+    (e) => {
+      const newId = e.currentTarget.id;
+      setIsVisible(true);
+      setId(Number(newId));
+    },
+    [setIsVisible, setId],
+  );
 
   return (
     <main className={s.root}>
@@ -35,9 +42,9 @@ const Main = () => {
           ))}
         </ul>
       </Container>
-      {id && (
-        <Modal isVisible={isVisible} setIsVisible={setIsVisible}>
-          <DetailView item={list.find((item) => item.id === id)} setIsVisible={setIsVisible} />
+      {id && isVisible && (
+        <Modal isVisible={isVisible} closeModal={closeModal}>
+          <DetailView item={list.find((item) => item.id === id)} />
         </Modal>
       )}
     </main>

@@ -21,7 +21,7 @@ const Tags = memo(({ classInput, value: tags, setValue: setTags, setDirty, setEr
       const value = target.value.trim();
       if (e.key === "Enter" && value) {
         setTags((prev) => {
-          if (prev.filter((tag) => tag === value).length) {
+          if (prev.some((tag) => tag === value)) {
             return prev;
           }
           const newTags = [...prev, value];
@@ -58,7 +58,7 @@ const Tags = memo(({ classInput, value: tags, setValue: setTags, setDirty, setEr
           ))
         ) : (
           <li className={s.item}>
-            <span className={s.tag}>{"Здесь будут ваши жанры"}</span>
+            <span className={s.tag}>Здесь будут ваши жанры</span>
           </li>
         )}
       </ul>

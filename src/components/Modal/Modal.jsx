@@ -1,16 +1,15 @@
 import { memo } from "react";
-import cx from "classnames";
 
 import Container from "@components/Container";
 
 import s from "./Modal.module.scss";
 
-const Modal = memo(({ isVisible, setIsVisible, children }) => {
+const Modal = memo(({ closeModal, children }) => {
   return (
-    <div className={cx(s.root, { [s.rootActive]: isVisible })} onClick={() => setIsVisible(false)}>
+    <div className={s.root} onClick={() => closeModal(false)}>
       <Container className={s.container}>
         <div className={s.wrapper} onClick={(e) => e.stopPropagation()}>
-          <div className={s.close} onClick={() => setIsVisible(false)}></div>
+          <div className={s.close} onClick={() => closeModal(false)} />
           {children}
         </div>
       </Container>
