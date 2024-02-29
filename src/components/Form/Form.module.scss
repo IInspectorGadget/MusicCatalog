@@ -23,3 +23,9 @@
   display: flex;
   gap: 40px;
 }
+
+@media (width <= 600px) {
+  .buttons {
+    flex-direction: column;
+  }
+}
