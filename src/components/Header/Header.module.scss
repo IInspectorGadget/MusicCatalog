@@ -1,4 +1,5 @@
 .root {
+  text-align: center;
   background: var(--purpure800);
 }
 
@@ -12,4 +13,10 @@
   font-size: 48px;
   line-height: 100px;
   color: var(--white);
+}
+
+@media (width <= 800px) {
+  .title {
+    font-size: 36px;
+  }
 }

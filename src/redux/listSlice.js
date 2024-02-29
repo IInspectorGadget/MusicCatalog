@@ -14,20 +14,16 @@ export const listSlice = createSlice({
       state.value = [...state.value, action.payload];
     },
     deleteItem: (state, action) => {
-      state.value = state.value.filter((el) => el.id !== action.payload);
+      state.value = state.value.filter((el) => el.id !== action.payload.id);
     },
     changeItem: (state, action) => {
       state.value = state.value.map((el) => {
-        if (el.id === action.payload.id) {
-          el.value = action.payload.editValue;
-        }
-        return el;
+        return el.id === action.payload.id ? action.payload : el;
       });
     },
   },
 });
 
-// Action creators are generated for each case reducer function
 export const { addItem, deleteItem, changeItem } = listSlice.actions;
 
 export default listSlice.reducer;

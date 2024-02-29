@@ -20,10 +20,16 @@
   padding: 10px;
 }
 
+.buttons {
+  display: flex;
+  gap: 1px;
+  align-items: center;
+}
+
 .button {
   cursor: pointer;
 
-  width: 108px;
+  height: 100%;
   padding: 10px;
 
   color: var(--white);
@@ -37,10 +43,29 @@
   }
 }
 
+.buttonShow {
+  width: 108px;
+}
+
 .title {
   color: var(--brown);
 }
 
 .author {
   color: var(--gray);
+}
+
+@media (width <=500px) {
+  .item {
+    flex-direction: column;
+  }
+
+  .buttons {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .button {
+    width: 100%;
+  }
 }

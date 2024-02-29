@@ -8,3 +8,16 @@
   border-radius: 6px;
   box-shadow: 0 2px 2px rgb(204 197 185 / 50%);
 }
+
+@media (width <=800px) {
+  .container {
+    margin-top: 5px;
+  }
+}
+
+@media (height <=600px) {
+  .container {
+    min-height: 100vh;
+    margin-top: 5px;
+  }
+}

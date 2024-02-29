@@ -1,7 +1,7 @@
 import { memo, useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { addItem } from "@src/redux/listSlice";
+import { addItem, deleteItem, changeItem } from "@src/redux/listSlice";
 
 import FormItem from "./FormItem";
 import Input from "@components/Input";
@@ -12,20 +12,20 @@ import Button from "@components/Button";
 
 import s from "./Form.module.scss";
 
-const Form = memo(({ closeModal }) => {
+const Form = memo(({ closeModal, isEdit = false, item }) => {
   const dispatch = useDispatch();
 
-  const [author, setAuthor] = useState("");
-  const [title, setTitle] = useState("");
-  const [tags, setTags] = useState([]);
-  const [date, setDate] = useState("");
-  const [text, setText] = useState("");
+  const [author, setAuthor] = useState(isEdit ? item.author : "");
+  const [title, setTitle] = useState(isEdit ? item.title : "");
+  const [tags, setTags] = useState(isEdit ? item.tags : []);
+  const [date, setDate] = useState(isEdit ? item.date : "");
+  const [text, setText] = useState(isEdit ? item.text : "");
 
-  const [authorDirty, setAuthorDirty] = useState(true);
-  const [titleDirty, setTitleDirty] = useState(true);
-  const [tagsDirty, setTagsDirty] = useState(true);
-  const [dateDirty, setDateDirty] = useState(true);
-  const [textDirty, setTextDirty] = useState(true);
+  const [authorDirty, setAuthorDirty] = useState(!isEdit);
+  const [titleDirty, setTitleDirty] = useState(!isEdit);
+  const [tagsDirty, setTagsDirty] = useState(!isEdit);
+  const [dateDirty, setDateDirty] = useState(!isEdit);
+  const [textDirty, setTextDirty] = useState(!isEdit);
 
   const [authorError, setAuthorError] = useState("");
   const [titleError, setTitleError] = useState("");
@@ -98,26 +98,36 @@ const Form = memo(({ closeModal }) => {
     setText("");
   }, []);
 
+  const handlerDelete = useCallback(() => {
+    closeModal();
+    dispatch(deleteItem(item));
+  }, [item, closeModal, dispatch]);
+
   const handlerSubmit = useCallback(
     (e) => {
       e.preventDefault();
       if (authorDirty || titleDirty || tagsDirty || dateDirty || textDirty) {
         checkErrors();
       } else {
-        const item = {
-          id: Math.random(),
+        const newItem = {
+          id: item?.id || Math.random(),
           author,
           title,
           tags,
           date,
           text,
         };
-        dispatch(addItem(item));
+        if (isEdit) {
+          dispatch(changeItem(newItem));
+        } else {
+          dispatch(addItem(newItem));
+        }
         closeModal(false);
         handlerReset();
       }
     },
     [
+      isEdit,
       author,
       authorDirty,
       checkErrors,
@@ -132,6 +142,7 @@ const Form = memo(({ closeModal }) => {
       title,
       titleDirty,
       handlerReset,
+      item,
     ],
   );
 
@@ -207,8 +218,8 @@ const Form = memo(({ closeModal }) => {
         <Error dirty={textDirty} error={textError} />
       </FormItem>
       <div className={s.buttons}>
-        <Button value={"Сохранить"} type='submit' />
-        <Button type='reset' onClick={handlerReset} />
+        <Button value={isEdit ? "Сохранить" : "Создать"} type='submit' />
+        {isEdit ? <Button type='reset' value={"Удалить"} onClick={handlerDelete} /> : <Button type='reset' onClick={handlerReset} />}
       </div>
     </form>
   );
