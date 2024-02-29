@@ -97,6 +97,11 @@ const Form = memo(({ setIsVisible }) => {
     setTagsError("");
     setDateError("");
     setTextError("");
+    setAuthor("");
+    setTitle("");
+    setDate("");
+    setTags([]);
+    setText("");
   }, []);
 
   const handlerSubmit = useCallback(
@@ -115,9 +120,25 @@ const Form = memo(({ setIsVisible }) => {
         };
         dispatch(addItem(item));
         setIsVisible(false);
+        handlerReset();
       }
     },
-    [author, authorDirty, checkErrors, date, dateDirty, dispatch, setIsVisible, tags, tagsDirty, text, textDirty, title, titleDirty],
+    [
+      author,
+      authorDirty,
+      checkErrors,
+      date,
+      dateDirty,
+      dispatch,
+      setIsVisible,
+      tags,
+      tagsDirty,
+      text,
+      textDirty,
+      title,
+      titleDirty,
+      handlerReset,
+    ],
   );
 
   return (
