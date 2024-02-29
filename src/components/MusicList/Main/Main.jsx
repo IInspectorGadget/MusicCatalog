@@ -24,9 +24,13 @@ const Main = () => {
         <ul className={s.list}>
           {list.map((item) => (
             <li key={item.id} id={item.id} className={s.item}>
-              <p className={s.title}>{item.title}</p>
-              <p className={s.author}>{item.author}</p>
-              <button onClick={handlerClick}></button>
+              <div className={s.info}>
+                <p className={s.title}>{item.title}</p>
+                <p className={s.author}>{item.author}</p>
+              </div>
+              <button className={s.button} onClick={handlerClick}>
+                Быстрый просмотр
+              </button>
             </li>
           ))}
         </ul>
