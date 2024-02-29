@@ -1,0 +1,29 @@
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 10px;
+
+  border-bottom: 1px solid var(--gray);
+
+  transition: background-color 0.3s ease 0s;
+
+  &:hover {
+    background-color: var(--purpure300);
+  }
+}
+
+.title {
+  color: var(--brown);
+}
+
+.author {
+  color: var(--gray);
+}
