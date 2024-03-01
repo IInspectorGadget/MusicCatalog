@@ -18,7 +18,6 @@ const Main = memo(({ filter }) => {
   const checkItem = useCallback(
     (item) => {
       if (!filter.length) {
-        console.log(1);
         return true;
       }
       return ~item.author.toLowerCase().indexOf(filter.toLowerCase()) || ~item.title.toLowerCase().indexOf(filter.toLowerCase());
