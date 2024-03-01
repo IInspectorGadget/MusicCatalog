@@ -1,11 +1,11 @@
-import { useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 
 import Modal from "@components/Modal";
 import Form from "@components/Form";
 
 import s from "./Header.module.scss";
 
-const Header = ({ filter, setFilter }) => {
+const Header = memo(({ filter, setFilter }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const closeModal = useCallback(() => {
@@ -38,6 +38,8 @@ const Header = ({ filter, setFilter }) => {
       )}
     </div>
   );
-};
+});
+
+Header.displayName = "Header";
 
 export default Header;
