@@ -12,12 +12,23 @@ const Header = ({ filter, setFilter }) => {
     setIsVisible(false);
   }, [setIsVisible]);
 
+  const handlerClick = useCallback(() => {
+    setIsVisible(true);
+  }, [setIsVisible]);
+
+  const handlerChange = useCallback(
+    (e) => {
+      setFilter(e.currentTarget.value);
+    },
+    [setFilter],
+  );
+
   return (
     <div className={s.root}>
       <div className={s.filter}>
-        <input className={s.search} value={filter} placeholder='Поиск' onChange={(e) => setFilter(e.currentTarget.value)} />
+        <input className={s.search} value={filter} placeholder='Поиск' onChange={handlerChange} />
       </div>
-      <button className={s.addButton} onClick={() => setIsVisible(true)}>
+      <button className={s.addButton} onClick={handlerClick}>
         Добавить
       </button>
       {isVisible && (

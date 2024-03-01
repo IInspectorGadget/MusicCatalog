@@ -17,10 +17,13 @@ const Main = memo(({ filter }) => {
 
   const checkItem = useCallback(
     (item) => {
-      if (!filter.length) {
+      if (!filter) {
         return true;
       }
-      return ~item.author.toLowerCase().indexOf(filter.toLowerCase()) || ~item.title.toLowerCase().indexOf(filter.toLowerCase());
+      const author = item.author.toLowerCase();
+      const title = item.title.toLowerCase();
+      const filterStr = filter.toLowerCase();
+      return author.includes(filterStr) || title.includes(filterStr);
     },
     [filter],
   );
