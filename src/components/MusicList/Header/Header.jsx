@@ -5,7 +5,7 @@ import Form from "@components/Form";
 
 import s from "./Header.module.scss";
 
-const Header = () => {
+const Header = ({ filter, setFilter }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const closeModal = useCallback(() => {
@@ -14,6 +14,9 @@ const Header = () => {
 
   return (
     <div className={s.root}>
+      <div className={s.filter}>
+        <input className={s.search} value={filter} placeholder='Поиск' onChange={(e) => setFilter(e.currentTarget.value)} />
+      </div>
       <button className={s.addButton} onClick={() => setIsVisible(true)}>
         Добавить
       </button>
