@@ -1,10 +1,15 @@
-import { memo, useCallback } from "react";
+import { memo, useCallback, useMemo } from "react";
 import cx from "classnames";
 
 import s from "./DetailView.module.scss";
 import DetailItem from "./DetailItem";
+import { useParams } from "react-router-dom";
 
-const DetailView = memo(({ item }) => {
+const DetailView = memo(({ className, list, item }) => {
+  const { id } = useParams();
+
+  const el = useMemo(() => (list ? list[parseInt(id) - 1] : item), [list, item, id]);
+
   const getDate = useCallback((date) => {
     const newDate = new Date(date);
     const year = `${newDate.getFullYear()}`.padStart(4, "0");
@@ -15,12 +20,12 @@ const DetailView = memo(({ item }) => {
   }, []);
 
   return (
-    <div className={cx(s.root)}>
-      <DetailItem title='Автор' text={item.author} />
-      <DetailItem title='Название произведения' text={item.title} />
-      <DetailItem title='Жанры' text={item.tags.join(", ")} />
-      <DetailItem title='Дата выхода' text={getDate(item.date)} />
-      <DetailItem title='Текс' text={item.text} isBigText />
+    <div className={cx(s.root, className)}>
+      <DetailItem title='Автор' text={el.author} />
+      <DetailItem title='Название произведения' text={el.title} />
+      <DetailItem title='Жанры' text={el.tags.join(", ")} />
+      <DetailItem title='Дата выхода' text={getDate(el.date)} />
+      <DetailItem title='Текс' text={el.text} isBigText />
     </div>
   );
 });

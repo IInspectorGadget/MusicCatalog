@@ -1,5 +1,5 @@
 .container {
-  min-height: 70vh;
+  height: 70vh;
   margin-top: 40px;
 
   color: var(--brown);
@@ -9,6 +9,19 @@
   box-shadow: 0 2px 2px rgb(204 197 185 / 50%);
 }
 
+.detailView {
+  padding: 20px;
+}
+
+.backLink {
+  display: inline-block;
+  margin: 20px 20px 0;
+  color: var(--purpure400);
+
+  &:hover {
+    color: var(--purpure500);
+  }
+}
 @media (width <=800px) {
   .container {
     margin-top: 5px;
