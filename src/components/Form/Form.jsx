@@ -1,7 +1,6 @@
-import { memo, useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
+import { memo, useCallback, useEffect, useState } from "react";
 
-import { addItem, deleteItem, changeItem } from "@src/redux/listSlice";
+import { useAddItemMutation, useDeleteItemMutation, useGetItemByIdQuery, useUpdateItemMutation } from "@src/redux/listApi";
 
 import FormItem from "./FormItem";
 import Input from "@components/Input";
@@ -12,14 +11,17 @@ import Button from "@components/Button";
 
 import s from "./Form.module.scss";
 
-const Form = memo(({ closeModal, isEdit = false, item }) => {
-  const dispatch = useDispatch();
+const Form = memo(({ closeModal, isEdit = false, id }) => {
+  const [deleteItemMutation] = useDeleteItemMutation();
+  const [updateItem] = useUpdateItemMutation();
+  const { data: item, isLoading } = useGetItemByIdQuery(id, { refetchOnMountOrArgChange: true });
+  const [addItem] = useAddItemMutation();
 
-  const [author, setAuthor] = useState(isEdit ? item.author : "");
-  const [title, setTitle] = useState(isEdit ? item.title : "");
-  const [tags, setTags] = useState(isEdit ? item.tags : []);
-  const [date, setDate] = useState(isEdit ? item.date : "");
-  const [text, setText] = useState(isEdit ? item.text : "");
+  const [author, setAuthor] = useState("");
+  const [title, setTitle] = useState("");
+  const [tags, setTags] = useState([]);
+  const [date, setDate] = useState("");
+  const [text, setText] = useState("");
 
   const [authorDirty, setAuthorDirty] = useState(!isEdit);
   const [titleDirty, setTitleDirty] = useState(!isEdit);
@@ -32,6 +34,16 @@ const Form = memo(({ closeModal, isEdit = false, item }) => {
   const [tagsError, setTagsError] = useState("");
   const [dateError, setDateError] = useState("");
   const [textError, setTextError] = useState("");
+
+  useEffect(() => {
+    if (isEdit && !isLoading) {
+      setAuthor(item.author);
+      setTitle(item.title);
+      setTags(item.tags);
+      setDate(item.date);
+      setText(item.text);
+    }
+  }, [isLoading, isEdit, item]);
 
   const handlerKeyDown = useCallback((e) => {
     if (e.key === "Enter") {
@@ -100,8 +112,22 @@ const Form = memo(({ closeModal, isEdit = false, item }) => {
 
   const handlerDelete = useCallback(() => {
     closeModal();
-    dispatch(deleteItem(item));
-  }, [item, closeModal, dispatch]);
+    deleteItemMutation(id).unwrap();
+  }, [id, deleteItemMutation, closeModal]);
+
+  const handlerChange = useCallback(
+    async (newItem) => {
+      updateItem(newItem).unwrap();
+    },
+    [updateItem],
+  );
+
+  const handlerAdd = useCallback(
+    async (newItem) => {
+      addItem(newItem).unwrap();
+    },
+    [addItem],
+  );
 
   const handlerSubmit = useCallback(
     (e) => {
@@ -118,9 +144,9 @@ const Form = memo(({ closeModal, isEdit = false, item }) => {
           text,
         };
         if (isEdit) {
-          dispatch(changeItem(newItem));
+          handlerChange(newItem);
         } else {
-          dispatch(addItem(newItem));
+          handlerAdd(newItem);
         }
         closeModal(false);
         handlerReset();
@@ -133,7 +159,6 @@ const Form = memo(({ closeModal, isEdit = false, item }) => {
       checkErrors,
       date,
       dateDirty,
-      dispatch,
       closeModal,
       tags,
       tagsDirty,
@@ -143,85 +168,89 @@ const Form = memo(({ closeModal, isEdit = false, item }) => {
       titleDirty,
       handlerReset,
       item,
+      handlerAdd,
+      handlerChange,
     ],
   );
 
   return (
-    <form className={s.root} onKeyDown={handlerKeyDown} onSubmit={handlerSubmit}>
-      <FormItem title='Автор'>
-        <Input
-          checkErrors={checkInput}
-          className={s.input}
-          id='artist'
-          name='artist'
-          value={author}
-          setValue={setAuthor}
-          setDirty={setAuthorDirty}
-          setError={setAuthorError}
-          maxLength={50}
-        />
-        <Error dirty={authorDirty} error={authorError} />
-      </FormItem>
-      <FormItem title='Название произведения'>
-        <Input
-          checkErrors={checkInput}
-          className={s.input}
-          id='title'
-          name='title'
-          value={title}
-          setValue={setTitle}
-          setDirty={setTitleDirty}
-          setError={setTitleError}
-          maxLength={50}
-        />
-        <Error dirty={titleDirty} error={titleError} />
-      </FormItem>
-      <FormItem title='Жанры'>
-        <Tags
-          checkErrors={checkTags}
-          classInput={s.input}
-          value={tags}
-          setValue={setTags}
-          max={5}
-          setDirty={setTagsDirty}
-          setError={setTagsError}
-        />
-        <Error dirty={tagsDirty} error={tagsError} />
-      </FormItem>
-      <FormItem title='Дата выхода'>
-        <Input
-          checkErrors={checkInput}
-          className={s.input}
-          type='date'
-          id='date'
-          name='date'
-          value={date}
-          setValue={setDate}
-          setDirty={setDateDirty}
-          setError={setDateError}
-        />
-        <Error dirty={dateDirty} error={dateError} />
-      </FormItem>
-      <FormItem title='Текст'>
-        <TextArea
-          checkErrors={checkInput}
-          className={s.input}
-          id='text'
-          name='text'
-          maxLength={3000}
-          isRequired
-          value={text}
-          setValue={setText}
-          setDirty={setTextDirty}
-          setError={setTextError}
-        />
-        <Error dirty={textDirty} error={textError} />
-      </FormItem>
-      <div className={s.buttons}>
-        <Button value={isEdit ? "Сохранить" : "Создать"} type='submit' />
-        {isEdit ? <Button type='reset' value={"Удалить"} onClick={handlerDelete} /> : <Button type='reset' onClick={handlerReset} />}
-      </div>
-    </form>
+    !isLoading && (
+      <form className={s.root} onKeyDown={handlerKeyDown} onSubmit={handlerSubmit}>
+        <FormItem title='Автор'>
+          <Input
+            checkErrors={checkInput}
+            className={s.input}
+            id='artist'
+            name='artist'
+            value={author}
+            setValue={setAuthor}
+            setDirty={setAuthorDirty}
+            setError={setAuthorError}
+            maxLength={50}
+          />
+          <Error dirty={authorDirty} error={authorError} />
+        </FormItem>
+        <FormItem title='Название произведения'>
+          <Input
+            checkErrors={checkInput}
+            className={s.input}
+            id='title'
+            name='title'
+            value={title}
+            setValue={setTitle}
+            setDirty={setTitleDirty}
+            setError={setTitleError}
+            maxLength={50}
+          />
+          <Error dirty={titleDirty} error={titleError} />
+        </FormItem>
+        <FormItem title='Жанры'>
+          <Tags
+            checkErrors={checkTags}
+            classInput={s.input}
+            value={tags}
+            setValue={setTags}
+            max={5}
+            setDirty={setTagsDirty}
+            setError={setTagsError}
+          />
+          <Error dirty={tagsDirty} error={tagsError} />
+        </FormItem>
+        <FormItem title='Дата выхода'>
+          <Input
+            checkErrors={checkInput}
+            className={s.input}
+            type='date'
+            id='date'
+            name='date'
+            value={date}
+            setValue={setDate}
+            setDirty={setDateDirty}
+            setError={setDateError}
+          />
+          <Error dirty={dateDirty} error={dateError} />
+        </FormItem>
+        <FormItem title='Текст'>
+          <TextArea
+            checkErrors={checkInput}
+            className={s.input}
+            id='text'
+            name='text'
+            maxLength={3000}
+            isRequired
+            value={text}
+            setValue={setText}
+            setDirty={setTextDirty}
+            setError={setTextError}
+          />
+          <Error dirty={textDirty} error={textError} />
+        </FormItem>
+        <div className={s.buttons}>
+          <Button value={isEdit ? "Сохранить" : "Создать"} type='submit' />
+          {isEdit ? <Button type='reset' value={"Удалить"} onClick={handlerDelete} /> : <Button type='reset' onClick={handlerReset} />}
+        </div>
+      </form>
+    )
   );
 });
 

@@ -1,14 +1,16 @@
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback } from "react";
 import cx from "classnames";
+
+import { useGetItemByIdQuery } from "@src/redux/listApi";
 
 import s from "./DetailView.module.scss";
 import DetailItem from "./DetailItem";
 import { useParams } from "react-router-dom";
 
-const DetailView = memo(({ className, list, item }) => {
-  const { id } = useParams();
-
-  const el = useMemo(() => (list ? list[parseInt(id) - 1] : item), [list, item, id]);
+const DetailView = memo(({ className, id: propId }) => {
+  const { id: paramId } = useParams();
+  const id = paramId || propId;
+  const { data: el, isLoading } = useGetItemByIdQuery(id);
 
   const getDate = useCallback((date) => {
     const newDate = new Date(date);
@@ -21,11 +23,15 @@ const DetailView = memo(({ className, list, item }) => {
 
   return (
     <div className={cx(s.root, className)}>
-      <DetailItem title='Автор' text={el.author} />
-      <DetailItem title='Название произведения' text={el.title} />
-      <DetailItem title='Жанры' text={el.tags.join(", ")} />
-      <DetailItem title='Дата выхода' text={getDate(el.date)} />
-      <DetailItem title='Текс' text={el.text} isBigText />
+      {!isLoading && (
+        <>
+          <DetailItem title='Автор' text={el.author} />
+          <DetailItem title='Название произведения' text={el.title} />
+          <DetailItem title='Жанры' text={el.tags.join(", ")} />
+          <DetailItem title='Дата выхода' text={getDate(el.date)} />
+          <DetailItem title='Текс' text={el.text} isBigText />
+        </>
+      )}
     </div>
   );
 });

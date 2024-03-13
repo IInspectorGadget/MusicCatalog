@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { Routes, Route, useSearchParams, Link } from "react-router-dom";
 
 import Container from "@components/Container";
@@ -21,8 +20,6 @@ const MusicList = () => {
     }
   }, [filter, setSearchParams]);
 
-  const list = useSelector((state) => state.list.value);
-
   return (
     <section className={s.root}>
       <Container className={s.container}>
@@ -43,7 +40,7 @@ const MusicList = () => {
                 <Link to='/MusicCatalog' className={s.backLink}>
                   Назад
                 </Link>
-                <DetailView list={list} className={s.detailView} />
+                <DetailView className={s.detailView} />
               </>
             }
           />

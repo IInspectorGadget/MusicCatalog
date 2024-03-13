@@ -1,10 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import listSlice from "@src/redux/listSlice";
-import { listStorageMiddleware } from "@src/redux/LocalStorageMiddleware";
+import { setupListeners } from "@reduxjs/toolkit/query";
+import { listApi } from "./listApi";
 
 export const store = configureStore({
   reducer: {
-    list: listSlice,
+    [listApi.reducerPath]: listApi.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(listStorageMiddleware.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(listApi.middleware),
 });
+
+setupListeners(store.dispatch);
+
+export default store;
