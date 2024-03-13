@@ -4,9 +4,15 @@
 }
 
 .item {
+  position: relative;
+
   display: flex;
   justify-content: space-between;
+
+  padding: 10px 0 10px 20px;
+
   border-bottom: 1px solid var(--gray);
+
   transition: background-color 0.3s ease 0s;
 
   &:hover {
@@ -17,7 +23,7 @@
 .info {
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  flex-grow: 1;
 }
 
 .buttons {
@@ -26,25 +32,26 @@
   align-items: center;
 }
 
-.button {
+.img {
   cursor: pointer;
 
-  height: 100%;
+  position: relative;
+  z-index: 2;
+
+  width: 50px;
+  height: 50px;
   padding: 10px;
 
   color: var(--white);
 
-  background-color: var(--purpure400);
+  object-fit: scale-down;
+  filter: brightness(0) saturate(100%) invert(43%) sepia(7%) saturate(950%) hue-rotate(263deg) brightness(95%) contrast(86%);
 
-  transition: background-color 0.3s ease 0s;
+  transition: filter 0.3s ease 0s;
 
   &:hover {
-    background-color: var(--purpure500);
+    filter: brightness(0) saturate(100%) invert(40%) sepia(28%) saturate(717%) hue-rotate(264deg) brightness(87%) contrast(89%);
   }
-}
-
-.buttonShow {
-  width: 108px;
 }
 
 .title {
@@ -55,17 +62,7 @@
   color: var(--gray);
 }
 
-@media (width <=500px) {
-  .item {
-    flex-direction: column;
-  }
-
-  .buttons {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .button {
-    width: 100%;
-  }
+.link {
+  position: absolute;
+  inset: 0;
 }

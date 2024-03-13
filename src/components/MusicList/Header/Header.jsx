@@ -26,7 +26,7 @@ const Header = memo(({ filter, setFilter }) => {
   return (
     <div className={s.root}>
       <div className={s.filter}>
-        <input className={s.search} value={filter} placeholder='Поиск' onChange={handlerChange} />
+        <input type='search' className={s.search} value={filter} placeholder='Поиск' onChange={handlerChange} />
       </div>
       <button className={s.addButton} onClick={handlerClick}>
         Добавить
